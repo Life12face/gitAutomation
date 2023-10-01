@@ -9,10 +9,10 @@ on:
   pull_request:
     branches: '*' #Allows all jobs to run. 
 
-jobs:
-  quality:               #this could be any name. eg-build
+#jobs:
+ # quality:               #this could be any name. eg-build
 
-    runs-on: ${{ matrix.os}}  #To run in multiple version, run as this 
+   #runs-on: ${{ matrix.os}}  #To run in multiple version, run as this 
 
     strategy:
       matrix:
