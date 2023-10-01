@@ -5,28 +5,35 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: '*' #Allows all jobs to run. 
+    branches: '*'
 
-#jobs:
- # quality:               #this could be any name. eg-build
-
-   #runs-on: ${{ matrix.os}}  #To run in multiple version, run as this 
-
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x, 16.x, 18.x] #this creates every single version of node
-        on: [ubuntu-latest, windows-latest, centos-latest] #this create on these platform plus more 
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [10.x, 12.x, 14.x, 16.x, 18.x]
+        os: [ubuntu-latest, windows-latest, centos-latest]
 
     steps:
-    - uses: actions/checkout@v3 #to clone our repos
-    - name: Use Node.js ${{ matrix.node-version }} #this setup node.js in CLI
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci #similar to nmp install
-    - run: npm run build --if-present #we are trying to run and build resources here
-    - run: npm test
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Build Project (if present)
+        run: npm run build --if-present
+
+      - name: Run Tests
+        run: npm test
